@@ -32,12 +32,13 @@ const Header = () => {
          <Link to="/">
             <HomeLogo src={DarkLogo} />
          </Link>
-         <StyledLink to="/">Accueil</StyledLink>
-         <StyledLink to="/survey/1">Questionnaire</StyledLink>
-         <StyledLink to="/freelances">Freelances</StyledLink>
-         <StyledLink to="/survey/1" $isFullLink>
-            Faire le test
-         </StyledLink>
+         <div>
+            <StyledLink to="/">Accueil</StyledLink>
+            <StyledLink to="/freelances">Profils</StyledLink>
+            <StyledLink to="/survey/1" $isFullLink>
+               Faire le test
+            </StyledLink>
+         </div>
       </NavContainer>
    );
 };

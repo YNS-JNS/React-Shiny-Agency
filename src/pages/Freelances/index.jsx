@@ -1,8 +1,12 @@
+import { useEffect, useState } from 'react';
+
 // Importing CSS and Assets: ___________________________
 // Importing Card Component
 import Card from '../../components/Card';
 // Importing colors
 import colors from '../../utils/style/colors';
+import { Loader, ErrorMsg } from '../../utils/style/Atoms';
+
 // _____________________________________________________
 
 // Styled components: __________________________________
@@ -34,24 +38,39 @@ const PageSubtitle = styled.h2`
    padding-bottom: 30px;
 `;
 
+const LoaderWrapper = styled.div`
+   display: flex;
+   justify-content: center;
+`;
 // _______________________________________
 
 const Freelances = () => {
-   // Some data for test:
-   const freelanceProfiles = [
-      {
-         name: 'Jane Doe',
-         jobTitle: 'Devops',
-      },
-      {
-         name: 'John Doe',
-         jobTitle: 'Developpeur frontend',
-      },
-      {
-         name: 'Jeanne Biche',
-         jobTitle: 'Développeuse Fullstack',
-      },
-   ];
+   const [freelancersList, setFreelancersList] = useState([]);
+   const [isDataLoading, setDataLoading] = useState(false);
+   const [error, setError] = useState(false);
+
+   // Nb: useEffect  permet de déclencher l’appel API ;
+   // et useState  permet de stocker les données qui sont retournées.
+
+   useEffect(() => {
+      setDataLoading(true);
+      fetch(`http://localhost:8000/freelances`)
+         .then((response) => {
+            response.json().then(({ freelancersList }) => {
+               setFreelancersList(freelancersList);
+               setDataLoading(false);
+            });
+         })
+         .catch((error) => {
+            console.error('+ Error ==>', error);
+            setError(true);
+         });
+   }, []);
+
+   // If there's an error:
+   if (error) {
+      return <ErrorMsg>Ooups! il y a eu un problème</ErrorMsg>;
+   }
 
    return (
       <div>
@@ -59,17 +78,41 @@ const Freelances = () => {
          <PageSubtitle>
             Chez Shiny nous réunissons les meilleurs profils pour vous.
          </PageSubtitle>
-         <CardsContainer>
-            {freelanceProfiles.map((profile, index) => (
-               <Card
-                  key={`${profile.name}-${index}`}
-                  label={profile.jobTitle}
-                  title={profile.name}
-               />
-            ))}
-         </CardsContainer>
+
+         {isDataLoading ? (
+            <LoaderWrapper>
+               <Loader />
+            </LoaderWrapper>
+         ) : (
+            <CardsContainer>
+               {freelancersList.map((profile, index) => (
+                  <Card
+                     key={`${profile.name}-${index}`}
+                     label={profile.job}
+                     title={profile.name}
+                     picture={profile.picture}
+                  />
+               ))}
+            </CardsContainer>
+         )}
       </div>
    );
 };
 
 export default Freelances;
+
+// Some data for test:
+// const freelanceProfiles = [
+//    {
+//       name: 'Jane Doe',
+//       jobTitle: 'Devops',
+//    },
+//    {
+//       name: 'John Doe',
+//       jobTitle: 'Developpeur frontend',
+//    },
+//    {
+//       name: 'Jeanne Biche',
+//       jobTitle: 'Développeuse Fullstack',
+//    },
+// ];

@@ -18,6 +18,7 @@ const CardLabel = styled.span`
    font-size: 22px;
    font-weight: normal;
    padding-left: 15px;
+   align-self: center;
 `;
 // Img:
 const CardImage = styled.img`
@@ -39,7 +40,7 @@ const CardWrapper = styled.div`
    flex-direction: column;
    justify-content: space-around;
    padding: 15px;
-   background-color: ${colors.backgroundLight};
+   background-color: ${colors.background};
    border-radius: 30px;
    width: 300px;
    height: 300px;
